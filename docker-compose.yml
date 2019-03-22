@@ -1,0 +1,17 @@
+version: '3'
+services:
+  device:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: danielscholl/iot-consumer-net:latest
+    deploy:
+      replicas: 5
+    environment:
+      TERM: rxvt
+      HUB: $HUB
+      STORAGE_ACCOUNT_NAME: $STORAGE_ACCOUNT_NAME
+      STORAGE_ACCOUNT_KEY: $STORAGE_ACCOUNT_KEY
+      STORAGE_CONTAINER: ehb
+      EVENT_HUB_ENDPOINT: $EVENT_HUB_ENDPOINT
+      APPINSIGHTS_INSTRUMENTATIONKEY: $APPINSIGHTS_INSTRUMENTATIONKEY

@@ -80,15 +80,68 @@ If using Visual Studio then the environment variables are pulled out of the `Pro
 
 ## LocalHost Consumer
 
-
 Windows Powershell
 ```powershell
+# Setup the Environment Variables in .env.ps1
+#----------------------------------
+$Env:GROUP = "iot-resources"
+$Env:HUB = (az iot hub list --resource-group $GROUP --query [].name -otsv)
+$Env:STORAGE_ACCOUNT_NAME = (az storage account list --resource-group $GROUP --query [].name -otsv)
+#----------------------------------
 
+# Run the Processor
+./task.ps1
+```
+
+Linux bash
+```bash
+# Setup the Environment Variables
+GROUP="iot-resources"
+export HUB=$(az iot hub list --resource-group $GROUP --query [].name -otsv)
+export STORAGE_ACCOUNT_NAME=$(az storage account list --resource-group $GROUP --query [].name -otsv)
+export STORAGE_ACCOUNT_KEY=$(az storage account keys list --resource-group $GROUP --account-name $Env:STORAGE_ACCOUNT_NAME  --query '[0].value' -otsv)
+export EVENT_HUB_ENDPOINT="<event_hub_endpoint>"
+
+# Run the Device
+npm start
 ```
 
 ## Docker Container Consumer
 
 Windows Powershell
 ```powershell
+# Setup the Environment Variables
+#----------------------------------
+$GROUP = "iot-resources"
+$Env:HUB = (az iot hub list --resource-group $GROUP --query [].name -otsv)
+$Env:STORAGE_ACCOUNT_NAME = (az storage account list --resource-group $GROUP --query [].name -otsv)
+$Env:STORAGE_ACCOUNT_KEY = (az storage account keys list --resource-group $GROUP --account-name $Env:STORAGE_ACCOUNT_NAME  --query '[0].value' -otsv)
 
+$POLICY = "iothubowner"
+$ENDPOINT = (az iot hub show -n $Env:HUB --query properties.eventHubEndpoints.events.endpoint -otsv)
+$SHARED_ACCESS_KEY = (az iot hub policy show --hub-name $Env:HUB --name $POLICY --query primaryKey -otsv)
+$EVENT_HUB_ENDPOINT = "Endpoint=$ENDPOINT;SharedAccessKeyName=$POLICY;SharedAccessKey=$SHARED_ACCESS_KEY;EntityPath=$HUB"
+
+$REGISTRY_SERVER = "danielscholl"
+#----------------------------------
+
+# Run the Docker Device
+./task.ps1 -run docker
+
+# Stop and Remove the Device
+./task.ps1 -run docker:stop
+```
+
+Linux bash
+```bash
+# Setup the Environment Variables
+export GROUP="iot-resources"
+export HUB=$(az iot hub list --resource-group $GROUP --query [].name -otsv)
+export STORAGE_ACCOUNT_NAME=$(az storage account list --resource-group $GROUP --query [].name -otsv)
+
+# Run the Docker Device
+npm run docker
+
+# Stop and Remove the Device
+npm run docker:stop
 ```

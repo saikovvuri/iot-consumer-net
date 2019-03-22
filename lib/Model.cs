@@ -29,6 +29,11 @@ namespace Iot.Model
             StorageAccountKey = Environment.GetEnvironmentVariable("STORAGE_ACCOUNT_KEY"); ;
             StorageContainer = (Environment.GetEnvironmentVariable("STORAGE_CONTAINER") != null) ? Environment.GetEnvironmentVariable("STORAGE_CONTAINER") : "eph";
         }
+
+        public string toJson()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
     public class Climate
     {

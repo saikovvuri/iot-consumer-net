@@ -1,0 +1,15 @@
+{
+  "name": "iot-consumer-net",
+  "version": "2.0.1",
+  "description": "A Simple IoT Event Processor",
+  "scripts": {
+    "prestart": "dotnet build",
+    "start": "dotnet run",
+    "docker:build": "docker build -t $REGISTRY_SERVER/iot-device-net:latest .",
+    "docker:start": "docker run -it --name $DEVICE --mount source=$(pwd)/cert,target=/usr/src/app/cert,type=bind -e PROTOCOL=$PROTOCOL -e EDGE_GATEWAY=$EDGE_GATEWAY -e APPINSIGHTS_INSTRUMENTATIONKEY=$APPINSIGHTS_INSTRUMENTATIONKEY -e DEVICE_CONNECTION_STRING=$(az iot hub device-identity show-connection-string --hub-name $HUB --device-id $DEVICE -otsv) $REGISTRY_SERVER/iot-device-net:latest",
+    "docker:stop": "docker rm -f $DEVICE",
+    "docker": "npm run docker:build && npm run docker:start"
+  },
+  "author": "",
+  "license": "MIT"
+}
