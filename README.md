@@ -1,7 +1,8 @@
 # iot-consumer-net
 
-The purpose of this solution is to consume data from the IoT Hub using an Event Processor Host Pattern
+A Simple IoT Event Processor written in dotnet with Docker Support
 
+[![Build Status](https://dascholl.visualstudio.com/IoT/_apis/build/status/danielscholl.iot-consumer-net?branchName=master)](https://dascholl.visualstudio.com/IoT/_build/latest?definitionId=27&branchName=master)
 
 __PreRequisites__
 
@@ -14,18 +15,19 @@ Requires the use of [Docker](https://www.docker.com/get-started).
 - [iot-resources](https://github.com/danielscholl/iot-resources)  - Deploying IoT Resources and x509 Management
 - [iot-device-edge](https://github.com/danielscholl/iot-device-edge) - Simple Edge Testing
 - [iot-device-js](https://github.com/danielscholl/iot-device-js) - Simple Device Testing (NodeJS)
-- [iot-device-js](https://github.com/danielscholl/iot-device-net) - Simple Device Testing (C#)
+- [iot-device-net](https://github.com/danielscholl/iot-device-net) - Simple Device Testing (C#)
+- [iot-consumer-net](https://github.com/danielscholl/iot-consumer-net) - Simple Event Processor (C#)
 - [iot-control-js](https://github.com/danielscholl/iot-control-js) - Simple Control Testing
 
 
 ### Supported Use Cases
 
-1. __Localhost Consumer
+1. __Localhost Event Processor Host__
 
     _On a localhost consume events using an event processor host_
 
 
-1. __Docker Consumer__
+1. __Docker Event Processor Host__
 
     _Within a container consume events using an event processor host_
 
@@ -135,9 +137,11 @@ $REGISTRY_SERVER = "danielscholl"
 Linux bash
 ```bash
 # Setup the Environment Variables
-export GROUP="iot-resources"
+GROUP="iot-resources"
 export HUB=$(az iot hub list --resource-group $GROUP --query [].name -otsv)
 export STORAGE_ACCOUNT_NAME=$(az storage account list --resource-group $GROUP --query [].name -otsv)
+export STORAGE_ACCOUNT_KEY=$(az storage account keys list --resource-group $GROUP --account-name $Env:STORAGE_ACCOUNT_NAME  --query '[0].value' -otsv)
+export EVENT_HUB_ENDPOINT="<event_hub_endpoint>"
 
 # Run the Docker Device
 npm run docker
