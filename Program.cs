@@ -15,14 +15,14 @@ namespace Iot
     class Program
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
-        private static readonly AutoResetEvent _closing = new AutoResetEvent(false);
+        private static readonly AutoResetEvent exitEvent = new AutoResetEvent(false);
 
         private static EventProcessorHost eventProcessorHost;
 
         private static async Task MainAsync(string[] args)
         {
-            AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
-            AssemblyLoadContext.Default.Unloading += Default_Unloading;
+            AppDomain.CurrentDomain.ProcessExit += OnExit;
+            AssemblyLoadContext.Default.Unloading += OnExit;
 
             // Setup the configuration File
             var config = new Configuration();
@@ -35,45 +35,29 @@ namespace Iot
                 config.StorageContainer);
 
             await eventProcessorHost.RegisterEventProcessorAsync<SimpleEventProcessor>();
-
-            // Console.WriteLine("Receiving. Press ENTER to stop worker.");
-            // Console.ReadLine();
-
-            // // Disposes of the Event Processor Host
-            // await eventProcessorHost.UnregisterEventProcessorAsync();
         }
         static void Main(string[] args)
         {
             MainAsync(args).GetAwaiter().GetResult();
-
-            Task.Factory.StartNew(() =>
-            {
-                while (true)
-                {
-                    Thread.Sleep(2000);
-                }
-            });
-
             Console.CancelKeyPress += new ConsoleCancelEventHandler(OnExit);
-            _closing.WaitOne();
+            exitEvent.WaitOne();
         }
 
-        private static void Default_Unloading(AssemblyLoadContext obj)
+        private static void OnExit(AssemblyLoadContext obj)
         {
             eventProcessorHost.UnregisterEventProcessorAsync().GetAwaiter().GetResult();
-            Console.WriteLine("unload");
         }
 
-        private static void CurrentDomain_ProcessExit(object sender, EventArgs e)
+        private static void OnExit(object sender, EventArgs e)
         {
-            Console.WriteLine("process exit");
+            eventProcessorHost.UnregisterEventProcessorAsync().GetAwaiter().GetResult();
         }
 
         protected static void OnExit(object sender, ConsoleCancelEventArgs args)
         {
-            // eventProcessorHost.UnregisterEventProcessorAsync().GetAwaiter().GetResult();
-            Console.WriteLine("Exit");
-            _closing.Set();
+            eventProcessorHost.UnregisterEventProcessorAsync().GetAwaiter().GetResult();
+            exitEvent.Set();
+            Console.WriteLine("Exit Completed");
         }
     }
 }
