@@ -30,7 +30,6 @@ namespace Iot
             {
                 insights = true;
                 this.telemetryClient = new TelemetryClient();
-
             }
         }
 
@@ -38,8 +37,10 @@ namespace Iot
         {
             this.telemetryClient.Context.Device.Id = context.PartitionId;
             this.telemetryClient.TrackEvent("iotConsumer started");
-            Log.Info($"SimpleEventProcessor initialized. Partition: '{context.PartitionId}'");
             this.telemetryClient.GetMetric("ConsumerCount").TrackValue(1);
+
+            Log.Info($"SimpleEventProcessor initialized. Partition: '{context.PartitionId}'");
+
             this.checkpointStopWatch = new Stopwatch();
             this.checkpointStopWatch.Start();
 
