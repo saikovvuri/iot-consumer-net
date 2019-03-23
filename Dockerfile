@@ -16,4 +16,4 @@ FROM microsoft/dotnet:2.2-runtime
 WORKDIR /usr/src/app
 COPY --from=build-env /usr/src/app/out .
 
-ENTRYPOINT ["dotnet", "Iotconsumer.dll"]
+# ENTRYPOINT ["dotnet", "IotConsumer.dll"]
