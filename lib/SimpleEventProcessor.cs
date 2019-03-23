@@ -30,16 +30,16 @@ namespace Iot
             {
                 insights = true;
                 this.telemetryClient = new TelemetryClient();
-                this.telemetryClient.Context.Device.Id = "consumer";
-                this.telemetryClient.TrackEvent("IoTConsumer started");
-                this.telemetryClient.GetMetric("SimulatorCount").TrackValue(1);
-                Log.Info($"Telemetry Inititalized");
+
             }
         }
 
         public Task OpenAsync(PartitionContext context)
         {
+            this.telemetryClient.Context.Device.Id = context.PartitionId;
+            this.telemetryClient.TrackEvent("iotConsumer started");
             Log.Info($"SimpleEventProcessor initialized. Partition: '{context.PartitionId}'");
+            this.telemetryClient.GetMetric("ConsumerCount").TrackValue(1);
             this.checkpointStopWatch = new Stopwatch();
             this.checkpointStopWatch.Start();
 
