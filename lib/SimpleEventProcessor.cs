@@ -31,8 +31,9 @@ namespace Iot
                 insights = true;
                 this.telemetryClient = new TelemetryClient();
                 this.telemetryClient.Context.Device.Id = "consumer";
-                this.telemetryClient.TrackEvent("IoTDeviceSimulator started");
+                this.telemetryClient.TrackEvent("IoTConsumer started");
                 this.telemetryClient.GetMetric("SimulatorCount").TrackValue(1);
+                Log.Info($"Telemetry Inititalized");
             }
         }
 
