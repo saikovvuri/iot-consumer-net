@@ -1,6 +1,6 @@
 version: '3'
 services:
-  device:
+  consumer:
     build:
       context: .
       dockerfile: Dockerfile
@@ -12,6 +12,5 @@ services:
       HUB: $HUB
       STORAGE_ACCOUNT_NAME: $STORAGE_ACCOUNT_NAME
       STORAGE_ACCOUNT_KEY: $STORAGE_ACCOUNT_KEY
-      STORAGE_CONTAINER: ehb
       EVENT_HUB_ENDPOINT: $EVENT_HUB_ENDPOINT
       APPINSIGHTS_INSTRUMENTATIONKEY: $APPINSIGHTS_INSTRUMENTATIONKEY
