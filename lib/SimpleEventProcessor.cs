@@ -30,7 +30,7 @@ namespace Iot
             {
                 insights = true;
                 this.telemetryClient = new TelemetryClient();
-                this.telemetryClient.Context.Device.Id = Environment.GetEnvironmentVariable("DEVICE");
+                this.telemetryClient.Context.Device.Id = "consumer";
                 this.telemetryClient.TrackEvent("IoTDeviceSimulator started");
                 this.telemetryClient.GetMetric("SimulatorCount").TrackValue(1);
             }
