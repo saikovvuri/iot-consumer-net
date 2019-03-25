@@ -23,10 +23,10 @@ APPINSIGHTS_INSTRUMENTATIONKEY=$(az resource list -g $GROUP --query "[?type=='Mi
 cat > ./aci/deploy.yaml << EOF
 apiVersion: '2018-06-01'
 location: eastus
-name: eph-container-group
+name: eventprocessorhost
 properties:
   containers:
-  - name: eph
+  - name: eventprocessorhost
     properties:
       environmentVariables:
         - name: 'STORAGE_ACCOUNT_NAME'
