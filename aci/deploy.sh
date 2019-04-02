@@ -4,6 +4,15 @@
 #  Usage:
 #    deploy.sh <type> <name>
 
+###############################
+## ARGUMENT INPUT            ##
+###############################
+
+usage() { echo "Usage: deploy.sh containerName" 1>&2; exit 1; }
+
+if [ -z $1 ]; then
+  usage
+fi
 
 printf "\n"
 tput setaf 2; echo "Creating ACI Deployment" ; tput sgr0
@@ -20,13 +29,13 @@ SHARED_ACCESS_KEY=$(az iot hub policy show --hub-name $HUB --name $POLICY --quer
 EVENT_HUB_ENDPOINT="Endpoint=$ENDPOINT;SharedAccessKeyName=$POLICY;SharedAccessKey=$SHARED_ACCESS_KEY;EntityPath=$HUB"
 APPINSIGHTS_INSTRUMENTATIONKEY=$(az resource list -g $GROUP --query "[?type=='Microsoft.Insights/components']".name -otsv)
 
-cat > ./aci/deploy.yaml << EOF
+cat > ./aci/$1.yaml << EOF
 apiVersion: '2018-06-01'
 location: eastus
-name: eventprocessorhost
+name: $1
 properties:
   containers:
-  - name: eventprocessorhost
+  - name: $1
     properties:
       environmentVariables:
         - name: 'STORAGE_ACCOUNT_NAME'
@@ -49,5 +58,5 @@ tags: {}
 type: Microsoft.ContainerInstance/containerGroups
 EOF
 
-echo "    ./aci/deploy.yaml"
+echo "    ./aci/$1.yaml"
 
