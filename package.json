@@ -9,8 +9,9 @@
     "docker:start": "docker run -it --name eventprocessorhost --mount source=$(pwd)/cert,target=/usr/src/app/cert,type=bind -e PROTOCOL=$PROTOCOL -e EDGE_GATEWAY=$EDGE_GATEWAY -e APPINSIGHTS_INSTRUMENTATIONKEY=$APPINSIGHTS_INSTRUMENTATIONKEY -e DEVICE_CONNECTION_STRING=$(az iot hub device-identity show-connection-string --hub-name $HUB --device-id $DEVICE -otsv) $REGISTRY_SERVER/iot-device-net:latest",
     "docker:stop": "docker rm -f eventprocessorhost",
     "docker": "npm run docker:build && npm run docker:start",
-    "aci": "aci/deploy.sh aci-eph && npm run aci:start",
-    "aci:start": "az container create --resource-group ${GROUP} --file aci/aci-eph.yaml -oyaml",
+    "aci": "npm run aci:create && npm run aci:provision",
+    "aci:create": "aci/deploy.sh aci-eph1",
+    "aci:provision": "az container create --resource-group ${GROUP} --file aci/deploy.yaml -oyaml",
     "aci:monitor": "az container logs  --resource-group ${GROUP} --name aci-eph --follow",
     "aci:stop": "rm -f aci/*.yaml && az container delete --resource-group ${GROUP} --name aci-eph --yes -oyaml"
   },
