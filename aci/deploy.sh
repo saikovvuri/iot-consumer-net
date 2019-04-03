@@ -27,7 +27,8 @@ POLICY="iothubowner"
 ENDPOINT=$(az iot hub show -n $HUB --query properties.eventHubEndpoints.events.endpoint -otsv)
 SHARED_ACCESS_KEY=$(az iot hub policy show --hub-name $HUB --name $POLICY --query primaryKey -otsv)
 EVENT_HUB_ENDPOINT="Endpoint=$ENDPOINT;SharedAccessKeyName=$POLICY;SharedAccessKey=$SHARED_ACCESS_KEY;EntityPath=$HUB"
-APPINSIGHTS_INSTRUMENTATIONKEY=$(az resource list -g $GROUP --query "[?type=='Microsoft.Insights/components']".name -otsv)
+APPINSIGHTS=$(az resource list -g $DPS_GROUP --query "[?type=='Microsoft.Insights/components']".name -otsv)
+APPINSIGHTS_INSTRUMENTATIONKEY=$(az resource show -g $DPS_GROUP -n $APPINSIGHTS --resource-type "Microsoft.Insights/components" --query properties.InstrumentationKey -otsv)
 
 cat > ./aci/$1.yaml << EOF
 apiVersion: '2018-06-01'
