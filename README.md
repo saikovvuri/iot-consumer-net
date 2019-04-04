@@ -149,3 +149,14 @@ npm run docker
 # Stop and Remove the Device
 npm run docker:stop
 ```
+
+## Azure Container Instances Consumer
+
+```bash
+COUNT=1
+until [ $COUNT -gt 4 ]; do
+aci/deploy.sh eph$COUNT
+az container create --resource-group ${GROUP} --file aci/eph$COUNT.yaml -oyaml
+let COUNT+=1
+done
+```

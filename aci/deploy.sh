@@ -30,7 +30,7 @@ EVENT_HUB_ENDPOINT="Endpoint=$ENDPOINT;SharedAccessKeyName=$POLICY;SharedAccessK
 APPINSIGHTS=$(az resource list -g $GROUP --query "[?type=='Microsoft.Insights/components']".name -otsv)
 APPINSIGHTS_INSTRUMENTATIONKEY=$(az resource show -g $GROUP -n $APPINSIGHTS --resource-type "Microsoft.Insights/components" --query properties.InstrumentationKey -otsv)
 
-cat > ./aci/deploy.yaml << EOF
+cat > ./aci/$1.yaml << EOF
 apiVersion: '2018-06-01'
 location: eastus
 name: $1
