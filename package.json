@@ -11,7 +11,7 @@
     "docker": "npm run docker:build && npm run docker:start",
     "aci": "npm run aci:create && npm run aci:provision",
     "aci:create": "aci/deploy.sh aci-eph1",
-    "aci:provision": "az container create --resource-group ${GROUP} --file aci/deploy.yaml -oyaml",
+    "aci:provision": "az container create --resource-group ${GROUP} --file aci/aci-eph1.yaml -oyaml",
     "aci:monitor": "az container logs  --resource-group ${GROUP} --name aci-eph --follow",
     "aci:stop": "rm -f aci/*.yaml && az container delete --resource-group ${GROUP} --name aci-eph --yes -oyaml"
   },
