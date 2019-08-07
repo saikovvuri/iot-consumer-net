@@ -70,15 +70,21 @@ namespace Iot
             {
                 foreach (EventData message in messages)
                 {
-                    var logContext = $"--- Partition {context.Lease.PartitionId}, Owner: {context.Lease.Owner}";
-                    //var logContext = $"--- Partition {context.Lease.PartitionId}, Owner: {context.Lease.Owner}, Offset: {message.Body.Offset} --- {DateTime.Now.ToString()}";
-                    Log.Info(logContext);
-                    if (insights) telemetryClient.GetMetric("EventMsgProcessed").TrackValue(1);
+
+                   // var logContext = $"--- Partition {context.Lease.PartitionId}, Owner: {context.Lease.Owner}, Offset: {message.Body.Offset} --- {DateTime.Now.ToString()}";
+                   // Log.Info(logContext);
+
+                    // if(insights) {
+                    //    Metric messageRead = telemetryClient.GetMetric("EventMsgProcessed", "Partition");
+                    //    messageRead.TrackValue(1, $"Partition${context.Lease.PartitionId}");
+                    // }
+
+                    if (insights) telemetryClient.GetMetric("EventMsgProcessed", "Partition").TrackValue(1, context.Lease.PartitionId);
 
                     string data = $"Received Message: {Encoding.UTF8.GetString(message.Body.Array)}";
-                    Log.Info("Size: " + data.Length);
+                    Log.Info($"{DateTime.Now.ToString()} -- Partition: {context.Lease.PartitionId} Size: {data.Length}");
                     Log.Debug(data);
-                    Log.Info("-----------------------");
+                    Log.Debug("-----------------------------------------");
                 }
 
                 if(this.checkpointStopWatch.Elapsed > TimeSpan.FromSeconds(5))
