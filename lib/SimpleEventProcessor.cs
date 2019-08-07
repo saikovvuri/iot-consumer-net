@@ -70,12 +70,15 @@ namespace Iot
             {
                 foreach (EventData message in messages)
                 {
-                    var logContext = $"--- Partition {context.Lease.PartitionId}, Owner: {context.Lease.Owner}, Offset: {message.Body.Offset} --- {DateTime.Now.ToString()}";
-                    Log.Debug(logContext);
+                    var logContext = $"--- Partition {context.Lease.PartitionId}, Owner: {context.Lease.Owner}";
+                    //var logContext = $"--- Partition {context.Lease.PartitionId}, Owner: {context.Lease.Owner}, Offset: {message.Body.Offset} --- {DateTime.Now.ToString()}";
+                    Log.Info(logContext);
                     if (insights) telemetryClient.GetMetric("EventMsgProcessed").TrackValue(1);
 
                     string data = $"Received Message: {Encoding.UTF8.GetString(message.Body.Array)}";
-                    Log.Info(data);
+                    Log.Info("Size: " + data.Length);
+                    Log.Debug(data);
+                    Log.Info("-----------------------");
                 }
 
                 if(this.checkpointStopWatch.Elapsed > TimeSpan.FromSeconds(5))

@@ -137,11 +137,11 @@ $REGISTRY_SERVER = "danielscholl"
 Linux bash
 ```bash
 # Setup the Environment Variables
-GROUP="iot-resources"
+export GROUP="iot-resources"
+export REGISTRY_SERVER="danielscholl"
 export HUB=$(az iot hub list --resource-group $GROUP --query [].name -otsv)
 export STORAGE_ACCOUNT_NAME=$(az storage account list --resource-group $GROUP --query [].name -otsv)
-export STORAGE_ACCOUNT_KEY=$(az storage account keys list --resource-group $GROUP --account-name $Env:STORAGE_ACCOUNT_NAME  --query '[0].value' -otsv)
-export EVENT_HUB_ENDPOINT="<event_hub_endpoint>"
+export APPINSIGHTS_INSTRUMENTATIONKEY="<your_appinsights_key>"
 
 # Run the Docker Device
 npm run docker
@@ -155,8 +155,8 @@ npm run docker:stop
 ```bash
 COUNT=1
 until [ $COUNT -gt 4 ]; do
-aci/deploy.sh eph$COUNT
-az container create --resource-group ${GROUP} --file aci/eph$COUNT.yaml -oyaml
-let COUNT+=1
+  aci/deploy.sh eph$COUNT
+  az container create --resource-group ${GROUP} --file aci/eph$COUNT.yaml -oyaml
+  let COUNT+=1
 done
 ```

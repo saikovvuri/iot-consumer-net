@@ -24,6 +24,12 @@ namespace Iot
             AppDomain.CurrentDomain.ProcessExit += OnExit;
             AssemblyLoadContext.Default.Unloading += OnExit;
 
+            // Setup the Options
+            var epo = new EventProcessorOptions
+            {
+                InitialOffsetProvider = (partitionId) => EventPosition.FromEnqueuedTime(DateTime.UtcNow)
+            };
+
             // Setup the configuration File
             var config = new Configuration();
 
@@ -34,7 +40,7 @@ namespace Iot
                 config.StorageConnectionString,
                 config.StorageContainer);
 
-            await eventProcessorHost.RegisterEventProcessorAsync<SimpleEventProcessor>();
+            await eventProcessorHost.RegisterEventProcessorAsync<SimpleEventProcessor>(epo);
         }
         static void Main(string[] args)
         {
