@@ -10,6 +10,7 @@ using log4net.Config;
 using Microsoft.ApplicationInsights;
 using Microsoft.Azure.EventHubs;
 using Microsoft.Azure.EventHubs.Processor;
+using Newtonsoft.Json;
 
 namespace Iot
 {
@@ -81,10 +82,12 @@ namespace Iot
 
                     if (insights) telemetryClient.GetMetric("EventMsgProcessed", "Partition").TrackValue(1, context.Lease.PartitionId);
 
-                    string data = $"Received Message: {Encoding.UTF8.GetString(message.Body.Array)}";
-                    Log.Info($"{DateTime.Now.ToString()} -- Partition: {context.Lease.PartitionId} Size: {data.Length}");
-                    Log.Debug(data);
-                    Log.Debug("-----------------------------------------");
+                    string data = $"{Encoding.UTF8.GetString(message.Body.Array)}";
+
+                    var logData = JsonConvert.SerializeObject(new { Partition = context.Lease.PartitionId, Size = data.Length });
+
+                    Log.Info($"{DateTime.Now.ToString()} {logData}");
+                    Log.Debug($"{data} {Environment.NewLine}");
                 }
 
                 if(this.checkpointStopWatch.Elapsed > TimeSpan.FromSeconds(5))
