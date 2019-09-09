@@ -22,12 +22,6 @@ Requires the use of [Docker](https://www.docker.com/get-started).
 
 ### Environment Settings
 
-Environment Settings act differently depending upon the Operating System and the IDE that is being used.
-
-
-_MacOSX_
-The best method to work with environment settings here is for command line to put environment settings in a .envrc file.  The `package.json` is being used as a convenient task runner.
-
 .envrc file format
 ```bash
 export HUB="<iot_hub>"
