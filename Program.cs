@@ -33,9 +33,19 @@ namespace Iot
             // Setup the configuration File
             var config = new Configuration();
 
+            var consumerGroupName = PartitionReceiver.DefaultConsumerGroupName;
+            if (!string.IsNullOrEmpty(config.ConsumerGroupName))
+            {
+                consumerGroupName = config.ConsumerGroupName;
+            }
+            else
+            {
+                consumerGroupName = PartitionReceiver.DefaultConsumerGroupName;
+            }
+
             eventProcessorHost = new EventProcessorHost(
                 config.Hub,
-                PartitionReceiver.DefaultConsumerGroupName,
+                consumerGroupName,
                 config.EventHubEndpoint,
                 config.StorageConnectionString,
                 config.StorageContainer);

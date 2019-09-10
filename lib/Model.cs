@@ -21,6 +21,8 @@ namespace Iot.Model
             get { return string.Format("DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}", StorageAccountName, StorageAccountKey); }
         }
 
+        public string ConsumerGroupName {get; set; }
+
         public Configuration()
         {
             Hub = Environment.GetEnvironmentVariable("HUB");
@@ -28,6 +30,7 @@ namespace Iot.Model
             StorageAccountName = Environment.GetEnvironmentVariable("STORAGE_ACCOUNT_NAME");
             StorageAccountKey = Environment.GetEnvironmentVariable("STORAGE_ACCOUNT_KEY"); ;
             StorageContainer = (Environment.GetEnvironmentVariable("STORAGE_CONTAINER") != null) ? Environment.GetEnvironmentVariable("STORAGE_CONTAINER") : "eph";
+            ConsumerGroupName = Environment.GetEnvironmentVariable("CONSUMER_GROUP_NAME");
         }
 
         public string toJson()
